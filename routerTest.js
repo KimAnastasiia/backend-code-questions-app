@@ -28,7 +28,7 @@ routerTest.post('/', async(req, res) => {
     if (file != null) {
     try{
         const test=await database.query("INSERT INTO tests (email, name) VALUES  ( ?, ?) ",[req.googleUserData.email, name])
-        file.mv('public/allTests/' +req.googleUserData.email+name+test.insertId+'.txt', async (err) => {
+        file.mv('exams/allTests/' +req.googleUserData.email+name+test.insertId+'.txt', async (err) => {
 
             if(err){
                 database.disConnect()

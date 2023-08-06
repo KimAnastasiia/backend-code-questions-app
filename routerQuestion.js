@@ -6,9 +6,61 @@ let algorithm = 'aes256'
 const sharp = require('sharp');
 const database= require("./database")
 const fs = require('fs');
+const { OAuth2Client } = require('google-auth-library');
+const CLIENT_ID = '190541474326-dhb8n9vuv9vbd81b9qdit1s0849un5pj.apps.googleusercontent.com';
 
+routerQuestion.get("/",async(req,res)=>{
 
-routerQuestion.post("/:email/:name/:id",async (req,res)=>{
+    const { access_user_token } = req.query;
+    
+    if (!access_user_token) {
+        return res.status(400).json({ error: 'Access token not provided.' });
+    }
+    
+    const client = new OAuth2Client(CLIENT_ID);
+    let  tokenInfo
+    try {
+        tokenInfo = await client.getTokenInfo(
+            access_user_token
+          );
+
+          console.log(tokenInfo)
+     
+    } catch (error) {
+        return res.status(401).json({ error: 'Invalid access token.' });
+    }
+    if(tokenInfo!=undefined){
+        const payload = tokenInfo;
+        req.googleUserEmail = payload; // You can access the user data in your route handlers using req.googleUserData
+        return  res.send({message:"successfully"})
+    }
+})
+routerQuestion.post("/:email/:name/:id/",async (req,res)=>{
+
+    const { access_user_token } = req.query;
+    
+    if (!access_user_token ||access_user_token =="null" ) {
+        req.googleUserEmail=null
+    }else if (access_user_token!=null ){
+    
+        const client = new OAuth2Client(CLIENT_ID);
+        let  tokenInfo
+        try {
+            tokenInfo = await client.getTokenInfo(
+                access_user_token
+            );
+
+            console.log(tokenInfo)
+        
+        } catch (error) {
+            return res.status(401).json({ error: 'Invalid access token.' });
+        }
+        if(tokenInfo!=undefined){
+            const payload = tokenInfo;
+            req.googleUserEmail = payload.email; // You can access the user data in your route handlers using req.googleUserData
+        }
+
+    }
 
     let answers= req.body//[{},{},{}]
     let currentDate = new Date(Date.now());
@@ -17,7 +69,7 @@ routerQuestion.post("/:email/:name/:id",async (req,res)=>{
     let id = req.params.id
     let answersInTexts= []
 
-    const allText = fs.readFileSync(`./public/allTests/${email}${name}${id}.txt`, 'utf-8');
+    const allText = fs.readFileSync(`./exams/allTests/${email}${name}${id}.txt`, 'utf-8');
     let regex =/Respuesta:\s*([A-D])/g;
     let code = Array.from(allText.matchAll(regex))
     let numberOfRightAnswers =0
@@ -66,7 +118,7 @@ routerQuestion.post("/:email/:name/:id",async (req,res)=>{
     database.connect()
 
     try{
-        await database.query("INSERT INTO testresults (testId, result, date, answers ) VALUES  (?, ?, ?, ?)", [ id, result, currentDate, answersInTexts.join(",") ])
+        await database.query("INSERT INTO testresults (testId, result, date, answers, email ) VALUES  (?, ?, ?, ?, ?)", [ id, result, currentDate, answersInTexts.join(","), req.googleUserEmail ])
         database.disConnect()
         res.send({
             listOfMarks:listOfMarks,
@@ -87,7 +139,7 @@ routerQuestion.get("/:email/:name/:id", (req,res)=>{
     let name = req.params.name
     let id = req.params.id
     let allQuestions =[]
-    const allText = fs.readFileSync(`./public/allTests/${email}${name}${id}.txt`, 'utf-8');
+    const allText = fs.readFileSync(`./exams/allTests/${email}${name}${id}.txt`, 'utf-8');
     let regex = /<<<CODE>>>([\s\S]+?)<<<CODE>>>/g;
     let code = Array.from(allText.matchAll(regex))
 
