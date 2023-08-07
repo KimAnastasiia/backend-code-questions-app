@@ -15,9 +15,10 @@ app.use(express.static("public"))
 app.use(express.json());
 var fileUpload = require('express-fileupload');
 const routerQuestion = require('./routerQuestion');
+const routerTestResults = require('./routerTestResults');
 app.use(fileUpload());
 
-app.use(["/test"],async(req,res,next)=>{
+app.use(["/test", "/testresults"],async(req,res,next)=>{
 
     const { access_token } = req.query;
     
@@ -67,6 +68,7 @@ app.use("",async(req,res,next)=>{
 app.use("/public/users", routerPublicUsers)
 app.use("/test", routerTest)
 app.use("/question", routerQuestion)
+app.use("/testresults", routerTestResults)
 app.listen(8080, ()=>{
     console.log("Server in 8081")
 })
