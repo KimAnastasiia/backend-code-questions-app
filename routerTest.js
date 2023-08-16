@@ -59,5 +59,20 @@ routerTest.delete('/', async(req, res) => {
         return res.send({error: error});
     }
 })
+routerTest.post('/createdTest', async(req, res) => {
+    let name =  req.query.testName
+    
+    database.connect();
 
+
+    try{
+        await database.query("INSERT INTO tests (email, name) VALUES  ( ?, ?) ",[req.googleUserData.email, name])
+        database.disConnect();
+        res.send({messege:"done"})
+    }catch (error){
+        database.disConnect();
+        res.send({message:"error"})
+    }
+    
+})
 module.exports=routerTest
