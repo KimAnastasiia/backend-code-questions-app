@@ -15,5 +15,18 @@ routerTestResults.get("/", async (req, res) => {
     }
 })
 
+routerTestResults.delete('/', async(req, res) => {
+    
+    let testId = req.query.testId
+    database.connect();
 
+    try{
+        await database.query("DELETE FROM testresults WHERE testId=?", [testId])
+        database.disConnect();
+        res.send({messege:"done"})
+
+    } catch (error){
+        return res.send({error: error});
+    }
+})
 module.exports = routerTestResults
