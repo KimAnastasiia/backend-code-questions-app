@@ -1,12 +1,19 @@
 const express = require('express');
 const crypto = require('crypto');
 const routerCreatedTests = express.Router();
-let keyEncrypt = 'password';
-let algorithm = 'aes256'
-const objectOfApiKey = require("./objectApiKey")
-const jwt = require("jsonwebtoken");
-let fs = require("fs")
 const database = require("./database")
+
+routerCreatedTests.get("/", async (req, res) => {
+    database.connect();
+    try {
+        const results = await database.query("SELECT DISTINCT nameOfTest, email FROM createdtests WHERE email = ? ", [ req.googleUserData.email])
+        database.disConnect()
+        return res.send(results)
+    } catch (error) {
+        database.disConnect()
+        return res.send({ error: error });
+    }
+})
 
 routerCreatedTests.post("/", async (req, res) => {
 
