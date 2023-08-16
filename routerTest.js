@@ -76,9 +76,10 @@ routerTest.post('/createdTest', async(req, res) => {
 
 
     try{
-        await database.query("INSERT INTO tests (email, name, created ) VALUES  ( ?, ?, ?) ",[req.googleUserData.email, name, 1])
+        let inseredInfo = await database.query("INSERT INTO tests (email, name, created ) VALUES  ( ?, ?, ?) ",[req.googleUserData.email, name, 1])
         database.disConnect();
-        res.send({messege:"done"})
+        res.send({messege:"done",
+        insertId:inseredInfo.insertId})
     }catch (error){
         database.disConnect();
         res.send({message:"error"})

@@ -11,8 +11,8 @@ routerCreatedTests.post("/", async (req, res) => {
             try {
                 await database.connect()
                 await database.query(
-                    "INSERT INTO createdtests ( code, email, question, answer1, answer2, answer3, answer4, rightAnswer, nameOfTest ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    [el.code, req.googleUserData.email, el.question, el.answer1, el.answer2, el.answer3, el.answer4, el.rightAnswer, el.nameOfTest])
+                    "INSERT INTO createdtests ( code, email, question, answer1, answer2, answer3, answer4, rightAnswer, nameOfTest, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    [el.code, req.googleUserData.email, el.question, el.answer1, el.answer2, el.answer3, el.answer4, el.rightAnswer, el.nameOfTest, req.query.testId])
                 await database.disConnect()
             } catch (er) {
                 await database.disConnect()
