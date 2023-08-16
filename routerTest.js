@@ -9,7 +9,7 @@ const database= require("./database")
 routerTest.get("/",async(req,res)=>{
     database.connect();
     try{
-        const testsInfo= await database.query("SELECT * from tests WHERE email=?", [req.googleUserData.email])
+        const testsInfo= await database.query("SELECT * from tests WHERE email=? and created = 0", [req.googleUserData.email])
         database.disConnect()
         return  res.send(testsInfo)
     }catch(error){
