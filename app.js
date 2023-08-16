@@ -17,6 +17,7 @@ var fileUpload = require('express-fileupload');
 const routerQuestion = require('./routerQuestion');
 const routerTestResults = require('./routerTestResults');
 const routerCreatedTests = require('./routerCreatedTests');
+const routerQuestionFromDB = require('./routerQuestionFromDB');
 app.use(fileUpload());
 
 app.use(["/test", "/testresults", "/createdTests"],async(req,res,next)=>{
@@ -71,6 +72,7 @@ app.use("/test", routerTest)
 app.use("/question", routerQuestion)
 app.use("/testresults", routerTestResults)
 app.use("/createdTests", routerCreatedTests)
+app.use("/questionDB", routerQuestionFromDB)
 app.listen(8080, ()=>{
     console.log("Server in 8081")
 })
