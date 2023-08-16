@@ -17,7 +17,17 @@ routerTest.get("/",async(req,res)=>{
         return res.send({error:error});
     }
 })
-
+routerTest.get("/created",async(req,res)=>{
+    database.connect();
+    try{
+        const testsInfo= await database.query("SELECT * from tests WHERE email=? and created = 1", [req.googleUserData.email])
+        database.disConnect()
+        return  res.send(testsInfo)
+    }catch(error){
+        database.disConnect()
+        return res.send({error:error});
+    }
+})
 routerTest.post('/', async(req, res) => {
 
     let file = req.files.myFileTest
