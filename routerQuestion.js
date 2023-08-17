@@ -69,22 +69,28 @@ routerQuestion.post("/:email/:name/:id/",async (req,res)=>{
     let id = req.params.id
     let answersInTexts= []
 
-    const allText = fs.readFileSync(`./exams/allTests/${email}${name}${id}.txt`, 'utf-8');
-    let regex =/Respuesta:\s*([A-D])/g;
-    let code = Array.from(allText.matchAll(regex))
+
     let numberOfRightAnswers =0
-    let listRightAnswers = []
+    let results = []
     
-    code.forEach((el)=>listRightAnswers.push(el[1]))
+    database.connect();
+    try {
+        results = await database.query("SELECT * FROM createdtests WHERE testId= ?", [id])
+        database.disConnect()
+    } catch (error) {
+        database.disConnect()
+        return res.send({ error: error });
+    }
+
 
     let listOfMarks=[]
 
-    listRightAnswers.forEach((rightAnswer, inedx)=>{
+    results.forEach((result, inedx)=>{
 
         return answers.forEach((userAnswer)=>{
 
             if(inedx+1==userAnswer.questionNumber){
-                if(rightAnswer==userAnswer.answerText){
+                if(result.rightAnswer==userAnswer.answerText){
                     listOfMarks.push({
                         questionNumber:userAnswer.questionNumber,
                         answer:true,
@@ -113,7 +119,7 @@ routerQuestion.post("/:email/:name/:id/",async (req,res)=>{
             numberOfRightAnswers= numberOfRightAnswers+1
         }
     }
-    let percentage = (numberOfRightAnswers /  listRightAnswers.length) * 100;
+    let percentage = (numberOfRightAnswers /  results.length) * 100;
     let result = percentage.toFixed(2) + '% / 100%'
     database.connect()
 
