@@ -23,6 +23,7 @@ routerCreatedTests.post("/", async (req, res) => {
 
 
         database.disConnect()
+        res.send({messege:"done"})
     } catch (error) {
         database.disConnect()
         return res.send({ error: error })
