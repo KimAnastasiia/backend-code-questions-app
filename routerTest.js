@@ -6,21 +6,11 @@ let algorithm = 'aes256'
 const sharp = require('sharp');
 const database = require("./database")
 const fs = require('fs');
+const path = require('path');
 routerTest.get("/", async (req, res) => {
     database.connect();
     try {
-        const testsInfo = await database.query("SELECT * from tests WHERE email=? and created = 0", [req.googleUserData.email])
-        database.disConnect()
-        return res.send(testsInfo)
-    } catch (error) {
-        database.disConnect()
-        return res.send({ error: error });
-    }
-})
-routerTest.get("/created", async (req, res) => {
-    database.connect();
-    try {
-        const testsInfo = await database.query("SELECT * from tests WHERE email=? and created = 1", [req.googleUserData.email])
+        const testsInfo = await database.query("SELECT * from tests WHERE email=?", [req.googleUserData.email])
         database.disConnect()
         return res.send(testsInfo)
     } catch (error) {
@@ -100,6 +90,15 @@ routerTest.post('/', async (req, res) => {
 
                     }
                     /*[{code:"sd",optionA:"DFDS", optionB:"XCV", optionC:"DFSD", optionD:"5HDF", questionText:'\r\nCompleta el siguiente código\r\n'},{}]*/
+                    const filePath = path.join('exams', 'allTests', req.googleUserData.email + name + test.insertId + '.txt');
+                    fs.unlink(filePath, (deleteErr) => {
+                        if (deleteErr) {
+                          // Handle error while deleting
+                          console.error('Error deleting file:', deleteErr);
+                        } else {
+                          console.log('File deleted successfully.');
+                        }
+                      });
                     allQuestions.forEach(async (el) => {
 
                         try {
