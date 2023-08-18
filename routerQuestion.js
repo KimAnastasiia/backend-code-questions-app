@@ -35,7 +35,7 @@ routerQuestion.get("/",async(req,res)=>{
         return  res.send({message:"successfully"})
     }
 })
-routerQuestion.post("/:email/:name/:id/",async (req,res)=>{
+routerQuestion.post("/:id/",async (req,res)=>{
 
     const { access_user_token } = req.query;
     
@@ -64,8 +64,6 @@ routerQuestion.post("/:email/:name/:id/",async (req,res)=>{
 
     let answers= req.body//[{},{},{}]
     let currentDate = new Date(Date.now());
-    let email = req.params.email
-    let name = req.params.name
     let id = req.params.id
     let answersInTexts= []
 
@@ -139,10 +137,8 @@ routerQuestion.post("/:email/:name/:id/",async (req,res)=>{
 })
 
 
-routerQuestion.get("/:email/:name/:id", async(req,res)=>{
+routerQuestion.get("/:id", async(req,res)=>{
 
-    let email = req.params.email
-    let name = req.params.name
     let id = req.params.id
     database.connect();
     try {
