@@ -3,6 +3,19 @@ const crypto = require('crypto');
 const routerCreatedTests = express.Router();
 const database = require("./database")
 
+routerCreatedTests.get("/:id", async(req,res)=>{
+
+    let id = req.params.id
+    database.connect();
+    try {
+        const results = await database.query("SELECT *  FROM createdtests WHERE testId = ?", [id])
+        database.disConnect()
+        return res.send(results)
+    } catch (error) {
+        database.disConnect()
+        return res.send({ error: error });
+    }
+})
 routerCreatedTests.post("/", async (req, res) => {
 
     try {
