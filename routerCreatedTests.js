@@ -19,13 +19,13 @@ routerCreatedTests.get("/:id", async(req,res)=>{
 routerCreatedTests.post("/", async (req, res) => {
 
     try {
-        req.body.forEach(async (el) => {
+        req.body.forEach(async (el, index) => {
 
             try {
                 await database.connect()
                 await database.query(
-                    "INSERT INTO createdtests ( code, email, question, answer1, answer2, answer3, answer4, rightAnswer, nameOfTest, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    [el.code, req.googleUserData.email, el.question, el.answer1, el.answer2, el.answer3, el.answer4, el.rightAnswer, el.nameOfTest, req.query.testId])
+                    "INSERT INTO createdtests ( numberOfQuestion, code, email, question, answer1, answer2, answer3, answer4, rightAnswer, nameOfTest, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    [(index+1), el.code, req.googleUserData.email, el.question, el.answer1, el.answer2, el.answer3, el.answer4, el.rightAnswer, el.nameOfTest, req.query.testId])
                 await database.disConnect()
             } catch (er) {
                 await database.disConnect()

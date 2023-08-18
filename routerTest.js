@@ -99,14 +99,15 @@ routerTest.post('/', async (req, res) => {
                           console.log('File deleted successfully.');
                         }
                       });
-                    allQuestions.forEach(async (el) => {
+                    allQuestions.forEach(async (el, index) => {
 
                         try {
                             await database.connect()
                             await database.query(
-                                "INSERT INTO createdtests ( code, email, question, answer1, answer2, answer3, answer4, rightAnswer, nameOfTest, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                [el.code, req.googleUserData.email, el.questionText, el.optionA, el.optionB, el.optionC, el.optionD, el.rightAnswer, el.nameOfTest, id])
-                            await database.disConnect()
+                                "INSERT INTO createdtests ( numberOfQuestion, code, email, question, answer1, answer2, answer3, answer4, rightAnswer, nameOfTest, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                [(index+1), el.code, req.googleUserData.email, el.questionText, el.optionA, el.optionB, el.optionC, el.optionD, el.rightAnswer, el.nameOfTest, id])
+                                await database.disConnect()
+                                res.send({ messege: "done" })
                         } catch (er) {
                             await database.disConnect()
                         }
@@ -114,11 +115,6 @@ routerTest.post('/', async (req, res) => {
 
                     })
                 }
-
-                database.disConnect()
-                res.send({ messege: "done" })
-
-
             })
 
         } catch (error) {
