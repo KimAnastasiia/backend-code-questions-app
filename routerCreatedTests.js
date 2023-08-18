@@ -3,7 +3,7 @@ const crypto = require('crypto');
 const routerCreatedTests = express.Router();
 const database = require("./database")
 
-routerCreatedTests.get("/:id", async(req,res)=>{
+routerCreatedTests.get("/:id", async (req, res) => {
 
     let id = req.params.id
     database.connect();
@@ -19,14 +19,15 @@ routerCreatedTests.get("/:id", async(req,res)=>{
 routerCreatedTests.post("/", async (req, res) => {
 
     try {
+        await database.connect()
         req.body.forEach(async (el, index) => {
 
             try {
-                await database.connect()
+               
                 await database.query(
                     "INSERT INTO createdtests ( numberOfQuestion, code, email, question, answer1, answer2, answer3, answer4, rightAnswer, nameOfTest, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     [(index+1), el.code, req.googleUserData.email, el.question, el.answer1, el.answer2, el.answer3, el.answer4, el.rightAnswer, el.nameOfTest, req.query.testId])
-                await database.disConnect()
+                
             } catch (er) {
                 await database.disConnect()
             }
@@ -36,7 +37,7 @@ routerCreatedTests.post("/", async (req, res) => {
 
 
         database.disConnect()
-        res.send({messege:"done"})
+        res.send({ messege: "done" })
     } catch (error) {
         database.disConnect()
         return res.send({ error: error })
@@ -44,18 +45,38 @@ routerCreatedTests.post("/", async (req, res) => {
 
 
 })
-routerCreatedTests.delete('/', async(req, res) => {
-    
+
+routerCreatedTests.put("/", async (req, res) => {
+    let listOfQuestions=req.body
+    await database.connect()
+    listOfQuestions.forEach(async(test)=>{
+        try{
+            
+            await database.query("UPDATE createdtests SET email=?, question=?, answer1=?,  answer2=?, answer3=?, answer4=?, rightAnswer=?, nameOfTest=?, code=?  where testId=? and numberOfQuestion=? ",
+             [test.email,test.question, test.answer1,test.answer2,test.answer3,test.answer4, test.rightAnswer, test.nameOfTest, test.code,  test.testId, test.numberOfQuestion ])
+        
+        }catch(error){
+            database.disConnect()
+            return res.send({ error: error })
+        }
+    })
+    database.disConnect()
+    return res.send({ message: "done" });
+
+})
+
+routerCreatedTests.delete('/', async (req, res) => {
+
     let testId = req.query.testId
     database.connect();
 
-    try{
+    try {
         await database.query("DELETE FROM createdtests WHERE testId=?", [testId])
         database.disConnect();
-        res.send({messege:"done"})
+        res.send({ messege: "done" })
 
-    } catch (error){
-        return res.send({error: error});
+    } catch (error) {
+        return res.send({ error: error });
     }
 })
 module.exports = routerCreatedTests
