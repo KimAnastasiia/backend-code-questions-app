@@ -19,7 +19,7 @@ const routerTestResults = require('./routerTestResults');
 const routerQuestionsPrivate = require('./routerQuestionsPrivate');
 app.use(fileUpload());
 
-app.use(["/test", "/testresults", "/questions/privet"],async(req,res,next)=>{
+app.use(["/test", "/testresults", "/questions/private"],async(req,res,next)=>{
 
     const { access_token } = req.query;
     

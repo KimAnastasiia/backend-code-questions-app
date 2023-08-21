@@ -18,6 +18,18 @@ routerTest.get("/", async (req, res) => {
         return res.send({ error: error });
     }
 })
+routerTest.get("/:id", async (req, res) => {
+    let id=req.params.id
+    database.connect();
+    try {
+        const testsInfo = await database.query("SELECT * from tests WHERE email=? and id=?", [req.googleUserData.email, id])
+        database.disConnect()
+        return res.send(testsInfo)
+    } catch (error) {
+        database.disConnect()
+        return res.send({ error: error });
+    }
+})
 routerTest.post('/', async (req, res) => {
 
     let file = req.files.myFileTest
@@ -122,6 +134,21 @@ routerTest.post('/', async (req, res) => {
             res.send({ message: "error" })
         }
     }
+})
+routerTest.put("/:id", async (req, res) => {
+    let newName=req.body.name
+    let id=req.params.id
+    database.connect()
+   
+        try {
+            await database.query("UPDATE tests SET  name=? where email=? and id=? ",
+            [ newName, req.googleUserData.email, id])
+            database.disConnect()
+            return res.send({ message: "done" });
+        } catch (error) {
+            database.disConnect()
+            return res.send({ error: error })
+        }
 })
 routerTest.delete('/', async (req, res) => {
 
