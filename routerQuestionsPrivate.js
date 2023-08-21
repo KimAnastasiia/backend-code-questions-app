@@ -57,7 +57,7 @@ routerQuestionsPrivate.put("/", async (req, res) => {
         try {
 
             await database.query("UPDATE questions SET  question=?, answer1=?,  answer2=?, answer3=?, answer4=?, rightAnswer=?, code=?  where testId=? and numberOfQuestion=? and email=? ",
-                [ test.question, test.answer1, test.answer2, test.answer3, test.answer4, test.rightAnswer, test.code, test.testId, test.numberOfQuestion, req.googleUserData.email])
+                [test.question, test.answer1, test.answer2, test.answer3, test.answer4, test.rightAnswer, test.code, test.testId, test.numberOfQuestion, req.googleUserData.email])
 
         } catch (error) {
             database.disConnect()
@@ -84,7 +84,7 @@ routerQuestionsPrivate.delete('/', async (req, res) => {
     }
 })
 routerQuestionsPrivate.delete('/:numberOfQuestion', async (req, res) => {
-    let numberOfQuestion=req.params.numberOfQuestion
+    let numberOfQuestion = req.params.numberOfQuestion
     let testId = req.query.testId
     database.connect();
 
@@ -96,5 +96,30 @@ routerQuestionsPrivate.delete('/:numberOfQuestion', async (req, res) => {
     } catch (error) {
         return res.send({ error: error });
     }
+})
+routerQuestionsPrivate.post("/addByOne", async (req, res) => {
+
+    try {
+        await database.connect()
+
+        if (req.body != undefined) {
+            try {
+
+                await database.query(
+                    "INSERT INTO questions ( numberOfQuestion, code, email, question, answer1, answer2, answer3, answer4, rightAnswer, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    [req.body.numberOfQuestion, req.body.code, req.googleUserData.email, req.body.question, req.body.answer1, req.body.answer2, req.body.answer3, req.body.answer4, req.body.rightAnswer, req.query.testId])
+                database.disConnect()
+                res.send({ messege: "done" })
+            } catch (er) {
+                await database.disConnect()
+            }
+        }
+
+    } catch (error) {
+        database.disConnect()
+        return res.send({ error: error })
+    }
+
+
 })
 module.exports = routerQuestionsPrivate
