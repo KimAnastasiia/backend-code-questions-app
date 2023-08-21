@@ -73,7 +73,7 @@ routerQuestion.post("/:id/",async (req,res)=>{
     
     database.connect();
     try {
-        results = await database.query("SELECT * FROM createdtests WHERE testId= ?", [id])
+        results = await database.query("SELECT * FROM questions WHERE testId= ?", [id])
         database.disConnect()
     } catch (error) {
         database.disConnect()
@@ -142,7 +142,7 @@ routerQuestion.get("/:id", async(req,res)=>{
     let id = req.params.id
     database.connect();
     try {
-        const results = await database.query("SELECT email, question, answer1, answer2, answer3, answer4, code  FROM createdtests WHERE testId = ?", [id])
+        const results = await database.query("SELECT email, question, answer1, answer2, answer3, answer4, code  FROM questions WHERE testId = ?", [id])
         database.disConnect()
         return res.send(results)
     } catch (error) {

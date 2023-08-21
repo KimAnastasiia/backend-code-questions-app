@@ -1,17 +1,17 @@
 const express = require('express');
 const crypto = require('crypto');
-const routerCreatedTests = express.Router();
+const routerQuestionsPrivate = express.Router();
 const database = require("./database")
 
-routerCreatedTests.get("/:id", async (req, res) => {
+routerQuestionsPrivate.get("/:id", async (req, res) => {
 
     let id = req.params.id
     database.connect();
     try {
-        const results = await database.query(`SELECT createdtests.*, tests.name AS nameOfTest 
-        FROM createdtests 
+        const results = await database.query(`SELECT questions.*, tests.name AS nameOfTest 
+        FROM questions 
         JOIN tests
-        ON createdtests.testId=tests.id 
+        ON questions.testId=tests.id 
         WHERE testId = ?`, [id])
         database.disConnect()
         return res.send(results)
@@ -20,7 +20,7 @@ routerCreatedTests.get("/:id", async (req, res) => {
         return res.send({ error: error });
     }
 })
-routerCreatedTests.post("/", async (req, res) => {
+routerQuestionsPrivate.post("/", async (req, res) => {
 
     try {
         await database.connect()
@@ -29,7 +29,7 @@ routerCreatedTests.post("/", async (req, res) => {
             try {
 
                 await database.query(
-                    "INSERT INTO createdtests ( numberOfQuestion, code, email, question, answer1, answer2, answer3, answer4, rightAnswer, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO questions ( numberOfQuestion, code, email, question, answer1, answer2, answer3, answer4, rightAnswer, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     [(index + 1), el.code, req.googleUserData.email, el.question, el.answer1, el.answer2, el.answer3, el.answer4, el.rightAnswer, req.query.testId])
 
             } catch (er) {
@@ -50,13 +50,13 @@ routerCreatedTests.post("/", async (req, res) => {
 
 })
 
-routerCreatedTests.put("/", async (req, res) => {
+routerQuestionsPrivate.put("/", async (req, res) => {
     let listOfQuestions = req.body
     await database.connect()
     listOfQuestions.forEach(async (test) => {
         try {
 
-            await database.query("UPDATE createdtests SET  question=?, answer1=?,  answer2=?, answer3=?, answer4=?, rightAnswer=?, code=?  where testId=? and numberOfQuestion=? and email=? ",
+            await database.query("UPDATE questions SET  question=?, answer1=?,  answer2=?, answer3=?, answer4=?, rightAnswer=?, code=?  where testId=? and numberOfQuestion=? and email=? ",
                 [ test.question, test.answer1, test.answer2, test.answer3, test.answer4, test.rightAnswer, test.code, test.testId, test.numberOfQuestion, req.googleUserData.email])
 
         } catch (error) {
@@ -69,13 +69,13 @@ routerCreatedTests.put("/", async (req, res) => {
 
 })
 
-routerCreatedTests.delete('/', async (req, res) => {
+routerQuestionsPrivate.delete('/', async (req, res) => {
 
     let testId = req.query.testId
     database.connect();
 
     try {
-        await database.query("DELETE FROM createdtests WHERE testId=?", [testId])
+        await database.query("DELETE FROM questions WHERE testId=?", [testId])
         database.disConnect();
         res.send({ messege: "done" })
 
@@ -83,4 +83,4 @@ routerCreatedTests.delete('/', async (req, res) => {
         return res.send({ error: error });
     }
 })
-module.exports = routerCreatedTests
+module.exports = routerQuestionsPrivate
