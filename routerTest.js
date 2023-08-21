@@ -104,8 +104,8 @@ routerTest.post('/', async (req, res) => {
                         try {
                             await database.connect()
                             await database.query(
-                                "INSERT INTO createdtests ( numberOfQuestion, code, email, question, answer1, answer2, answer3, answer4, rightAnswer, nameOfTest, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                                [(index+1), el.code, req.googleUserData.email, el.questionText, el.optionA, el.optionB, el.optionC, el.optionD, el.rightAnswer, el.nameOfTest, id])
+                                "INSERT INTO createdtests ( numberOfQuestion, code, email, question, answer1, answer2, answer3, answer4, rightAnswer,testId ) VALUES  ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                                [(index+1), el.code, req.googleUserData.email, el.questionText, el.optionA, el.optionB, el.optionC, el.optionD, el.rightAnswer, id])
                                 await database.disConnect()
                                 res.send({ messege: "done" })
                         } catch (er) {

@@ -8,7 +8,11 @@ routerCreatedTests.get("/:id", async (req, res) => {
     let id = req.params.id
     database.connect();
     try {
-        const results = await database.query("SELECT *  FROM createdtests WHERE testId = ?", [id])
+        const results = await database.query(`SELECT createdtests.*, tests.name AS nameOfTest 
+        FROM createdtests 
+        JOIN tests
+        ON createdtests.testId=tests.id 
+        WHERE testId = ?`, [id])
         database.disConnect()
         return res.send(results)
     } catch (error) {
@@ -23,11 +27,11 @@ routerCreatedTests.post("/", async (req, res) => {
         req.body.forEach(async (el, index) => {
 
             try {
-               
+
                 await database.query(
-                    "INSERT INTO createdtests ( numberOfQuestion, code, email, question, answer1, answer2, answer3, answer4, rightAnswer, nameOfTest, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    [(index+1), el.code, req.googleUserData.email, el.question, el.answer1, el.answer2, el.answer3, el.answer4, el.rightAnswer, el.nameOfTest, req.query.testId])
-                
+                    "INSERT INTO createdtests ( numberOfQuestion, code, email, question, answer1, answer2, answer3, answer4, rightAnswer, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    [(index + 1), el.code, req.googleUserData.email, el.question, el.answer1, el.answer2, el.answer3, el.answer4, el.rightAnswer, req.query.testId])
+
             } catch (er) {
                 await database.disConnect()
             }
@@ -47,15 +51,15 @@ routerCreatedTests.post("/", async (req, res) => {
 })
 
 routerCreatedTests.put("/", async (req, res) => {
-    let listOfQuestions=req.body
+    let listOfQuestions = req.body
     await database.connect()
-    listOfQuestions.forEach(async(test)=>{
-        try{
-            
-            await database.query("UPDATE createdtests SET email=?, question=?, answer1=?,  answer2=?, answer3=?, answer4=?, rightAnswer=?, nameOfTest=?, code=?  where testId=? and numberOfQuestion=? ",
-             [test.email,test.question, test.answer1,test.answer2,test.answer3,test.answer4, test.rightAnswer, test.nameOfTest, test.code,  test.testId, test.numberOfQuestion ])
-        
-        }catch(error){
+    listOfQuestions.forEach(async (test) => {
+        try {
+
+            await database.query("UPDATE createdtests SET  question=?, answer1=?,  answer2=?, answer3=?, answer4=?, rightAnswer=?, code=?  where testId=? and numberOfQuestion=? and email=? ",
+                [ test.question, test.answer1, test.answer2, test.answer3, test.answer4, test.rightAnswer, test.code, test.testId, test.numberOfQuestion, req.googleUserData.email])
+
+        } catch (error) {
             database.disConnect()
             return res.send({ error: error })
         }

@@ -142,7 +142,7 @@ routerQuestion.get("/:id", async(req,res)=>{
     let id = req.params.id
     database.connect();
     try {
-        const results = await database.query("SELECT email, question, answer1, answer2, answer3, answer4, code, nameOfTest  FROM createdtests WHERE testId = ?", [id])
+        const results = await database.query("SELECT email, question, answer1, answer2, answer3, answer4, code  FROM createdtests WHERE testId = ?", [id])
         database.disConnect()
         return res.send(results)
     } catch (error) {
