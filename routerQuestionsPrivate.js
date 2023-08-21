@@ -83,4 +83,18 @@ routerQuestionsPrivate.delete('/', async (req, res) => {
         return res.send({ error: error });
     }
 })
+routerQuestionsPrivate.delete('/:numberOfQuestion', async (req, res) => {
+    let numberOfQuestion=req.params.numberOfQuestion
+    let testId = req.query.testId
+    database.connect();
+
+    try {
+        await database.query("DELETE FROM questions WHERE testId=? and numberOfQuestion=?", [testId, numberOfQuestion])
+        database.disConnect();
+        res.send({ messege: "done" })
+
+    } catch (error) {
+        return res.send({ error: error });
+    }
+})
 module.exports = routerQuestionsPrivate
