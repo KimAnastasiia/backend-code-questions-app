@@ -27,7 +27,7 @@ routerTest.post('/', async (req, res) => {
 
     if (file != null) {
         try {
-            const test = await database.query("INSERT INTO tests (email, name, created ) VALUES  ( ?, ?, ?) ", [req.googleUserData.email, name, 0])
+            const test = await database.query("INSERT INTO tests (email, name,  ) VALUES  (  ?, ?) ", [req.googleUserData.email, name])
             await file.mv('exams/allTests/' + req.googleUserData.email + name + test.insertId + '.txt', async (err) => {
 
                 if (err) {
@@ -144,7 +144,7 @@ routerTest.post('/createdTest', async (req, res) => {
 
 
     try {
-        let inseredInfo = await database.query("INSERT INTO tests (email, name, created ) VALUES  ( ?, ?, ?) ", [req.googleUserData.email, name, 1])
+        let inseredInfo = await database.query("INSERT INTO tests (email, name ) VALUES  ( ?, ?) ", [req.googleUserData.email, name])
         database.disConnect();
         res.send({
             messege: "done",
