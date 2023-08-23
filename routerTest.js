@@ -39,7 +39,7 @@ routerTest.post('/', async (req, res) => {
 
     if (file != null) {
         try {
-            const test = await database.query("INSERT INTO tests (email, name,  ) VALUES  (  ?, ?) ", [req.googleUserData.email, name])
+            const test = await database.query("INSERT INTO tests (email, name ) VALUES  (  ?, ?) ", [req.googleUserData.email, name])
             await file.mv('exams/allTests/' + req.googleUserData.email + name + test.insertId + '.txt', async (err) => {
 
                 if (err) {
@@ -72,25 +72,25 @@ routerTest.post('/', async (req, res) => {
                         //match = allText.match(regex);
                         let optionA = Array.from(allText.matchAll(regex))
 
-                        objectQuestion.optionA = optionA[i][0];
+                        objectQuestion.optionA = optionA[i][0].slice(3)
 
                         regex = /^B\..+/gm;
                         //match = allText.match(regex);
                         let optionB = Array.from(allText.matchAll(regex))
 
-                        objectQuestion.optionB = optionB[i][0];
+                        objectQuestion.optionB = optionB[i][0].slice(3)
 
                         regex = /^C\..+/gm;
                         //match = allText.match(regex);
                         let optionC = Array.from(allText.matchAll(regex))
 
-                        objectQuestion.optionC = optionC[i][0];
+                        objectQuestion.optionC = optionC[i][0].slice(3)
 
                         regex = /^D\..+/gm;
                         //match = allText.match(regex);
                         let optionD = Array.from(allText.matchAll(regex))
 
-                        objectQuestion.optionD = optionD[i][0];
+                        objectQuestion.optionD = optionD[i][0].slice(3)
 
                         regex = /Respuesta:\s*([A-D])/g;
                         let rightAnswer = Array.from(allText.matchAll(regex))
