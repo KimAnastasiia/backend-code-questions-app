@@ -14,11 +14,12 @@ app.use(express.json());
 var fileUpload = require('express-fileupload');
 const routerQuestion = require('./routerQuestion');
 const routerTestResults = require('./routerTestResults');
-const routerQuestionsPrivate = require('./routerQuestionsPrivate');
+const routerQuestionsPrivate = require('./routers/routerQuestionsPrivate');
 const initMiddlewares = require('./middlewares/middlewares');
+const initRouters = require("./routers/routers");
 app.use(fileUpload());
 initMiddlewares(app)
-
+initRouters(app);
 app.use("/public/users", routerPublicUsers)
 app.use("/test", routerTest)
 app.use("/question", routerQuestion)
