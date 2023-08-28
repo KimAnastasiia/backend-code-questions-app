@@ -2,7 +2,7 @@ const database = require("../database")
 
 repositoryTestResults = {
 
-    getResult: async (testId) => {
+    getResults: async (testId) => {
         let results = null
 
         try {

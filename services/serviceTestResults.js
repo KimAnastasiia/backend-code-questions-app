@@ -1,9 +1,9 @@
-const {getResult, deleteResults  } = require('../repositories/repositoryTestResults')
+const {getResults, deleteResults  } = require('../repositories/repositoryTestResults')
 const InputError = require('../errros/inputError')
 const LogicError = require('../errros/logicError')
 
 serviceTestResults = {
-    getResult: async (testId) => {
+    getResults: async (testId) => {
         let errors = []
 
         if (testId == undefined)
@@ -11,7 +11,7 @@ serviceTestResults = {
         if (errors.length > 0)
             throw errors
 
-        let result = await getResult(testId);
+        let result = await getResults(testId);
 
         if (result == null)
             errors.push(new LogicError("not possible get result"));

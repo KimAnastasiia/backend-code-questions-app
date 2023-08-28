@@ -1,7 +1,7 @@
 const express = require('express');
 const routerTestResults = express.Router();
-
-routerTestResults.get("/", )
-routerTestResults.delete('/',)
+const {getResults, deleteResults} = require('../controllers/controllerTestResults')
+routerTestResults.get("/", getResults)
+routerTestResults.delete('/', deleteResults)
 
 module.exports = routerTestResults

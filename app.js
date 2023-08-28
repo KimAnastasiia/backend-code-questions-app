@@ -13,7 +13,6 @@ app.use(express.json());
 var fileUpload = require('express-fileupload');
 
 const routerQuestion = require('./routerQuestion');
-const routerTestResults = require('./routerTestResults');
 
 
 const initMiddlewares = require('./middlewares/middlewares');
@@ -25,7 +24,6 @@ initRouters(app);
 
 app.use("/public/users", routerPublicUsers)
 app.use("/question", routerQuestion)
-app.use("/testresults", routerTestResults)
 
 app.listen(8080, ()=>{
     console.log("Server in 8081")
