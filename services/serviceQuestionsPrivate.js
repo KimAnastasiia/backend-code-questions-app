@@ -145,10 +145,16 @@ serviceQuestionsPrivate = {
 
         if (errors.length > 0)
             throw errors
+
         let deletedQuestion = deleteQuestionInTest(numberOfQuestion, testId);
+
         if (deletedQuestion == null)
-            if (errors.length > 0)
-                throw errors
+            errors.push(new LogicError("error in delete question"))
+
+
+        if (errors.length > 0)
+            throw errors
+            
         return deletedQuestion
     },
 

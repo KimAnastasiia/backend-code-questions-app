@@ -2,21 +2,6 @@ const database = require("../database")
 const fs = require('fs');
 const path = require('path');
 repositoryTest = {
-    insertQuestion: async (index, code, email, questionText, optionA, optionB, optionC, optionD, rightAnswer, id) => {
-        let results = null
-
-        try {
-            database.connect();
-            results = await database.query(
-                "INSERT INTO questions ( numberOfQuestion, code, email, question, answer1, answer2, answer3, answer4, rightAnswer,testId ) VALUES  ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                [index, code, email, questionText, optionA, optionB, optionC, optionD, rightAnswer, id])
-            database.disConnect()
-        } catch (error) {
-            database.disConnect()
-            console.log(error)
-        }
-        return results
-    },
     insertTests: async (email, name) => {
         let results = null
 

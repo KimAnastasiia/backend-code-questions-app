@@ -1,4 +1,5 @@
-const { getTests, getTest, insertTests, insertQuestion, insertTest, updateTest, deleteTest } = require('../repositories/repositoryTest')
+const { getTests, getTest, insertTests, insertTest, updateTest, deleteTest } = require('../repositories/repositoryTest')
+const {insertQuestions  } = require('../repositories/repositoryQuestionsPrivate')
 const InputError = require('../errros/inputError')
 const LogicError = require('../errros/logicError')
 serviceTest = {
@@ -117,7 +118,7 @@ serviceTest = {
         }
         let anwers = []
         allQuestions.forEach(async (el, index) => {
-            let result = await insertQuestion((index + 1), el.code, email, el.questionText, el.optionA, el.optionB, el.optionC, el.optionD, el.rightAnswer, id)
+            let result = await insertQuestions((index + 1), el.code, email, el.questionText, el.optionA, el.optionB, el.optionC, el.optionD, el.rightAnswer, id)
             anwers.push(result)
         })
         if (anwers.find((answer) => answer == null) != undefined)
