@@ -15,7 +15,7 @@ repositoryTestResults = {
         }
         return results
     },
-    deleteResult: async (testId) => {
+    deleteResults: async (testId) => {
 
         let result = null
         try {

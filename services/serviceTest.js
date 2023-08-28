@@ -179,7 +179,7 @@ serviceTest = {
         let info = await deleteTest(testId)
 
         if (info == null)
-            errors.push(new LogicError("not possible put the test"));
+            errors.push(new LogicError("not possible delete the test"));
         // THROW ERROR BUSSINES LOGIC
         if (errors.length > 0)
             throw errors
