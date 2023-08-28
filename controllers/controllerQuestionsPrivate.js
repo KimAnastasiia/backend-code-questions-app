@@ -9,82 +9,61 @@ controllerQuestionsPrivate={
 		try {
 			let id = req.params.id
 			let question = await getQuestion(id)
-			if ( question == null){
-				// ERROR IN SERVER CODE
-				res.status(500).json({ error: "error getting question"})	
-			} 
-
 			res.json(question)
 		}
-		catch (e) {
-			// ERROR IN USER INPUT DATA
-			res.status(400).json({ error: e.map( error => error.message ) })
+		catch (errors) {
+			return res.status(errors[0].code).json({ error: errors} )
 		}
 	},
     postQuestionByOne:async (req, res) => {
+		let {numberOfQuestion, code, question, answer1, answer2, answer3,answer4, rightAnswer } = req.body
+		let testId =req.query.testId
+		let email = req.googleUserData.email
 		try {
-			let question = await insertQuestionByOne(req.body.numberOfQuestion, req.body.code, req.googleUserData.email, req.body.question, req.body.answer1, req.body.answer2, req.body.answer3, req.body.answer4, req.body.rightAnswer, req.query.testId)
-			if ( question == null){
-				// ERROR IN SERVER CODE
-				res.status(500).json({ error: "error insert question"})	
-			} 
-
-			res.json(question)
+			let questionAnswer = await insertQuestionByOne(numberOfQuestion, code, email, question, answer1, answer2,answer3, answer4, rightAnswer, testId)
+			return res.json(questionAnswer)
 		}
-		catch (e) {
+		catch (errors) {
 			// ERROR IN USER INPUT DATA
-			res.status(400).json({ error: e.map( error => error.message ) })
+			return res.status(errors[0].code).json({ error: errors} )
 		}
 	},
     postQuestions:async (req, res) => {
-		try {
+	
             let listQuestions=req.body
             let testId = req.query.testId
             let email = req.googleUserData.email
-			let questions = await insertQuestions(listQuestions, email, testId)
-			if ( questions == null){
+			try{
+				let questions = await insertQuestions(listQuestions, email, testId)
 				// ERROR IN SERVER CODE
-				res.status(500).json({ error: "error insert questions"})	
-			} 
-
-			res.json(questions)
-		}
-		catch (e) {
-			// ERROR IN USER INPUT DATA
-			res.status(400).json({ error: e.map( error => error.message ) })
-		}
+				return res.json(questions)
+			}catch (errors) {
+				// ERROR IN USER INPUT DATA
+				return res.status(errors[0].code).json({ error: errors} )
+			}
+	
 	},
     putQuestions:async (req, res) => {
-		try {
-            let listOfQuestions=req.body
-            let email= req.googleUserData.email
-			let updatedQuestions = await updateQuestions(listOfQuestions, email)
-			if ( updatedQuestions == null){
-				// ERROR IN SERVER CODE
-				res.status(500).json({ error: "error update questions"})	
-			} 
 
+		let listOfQuestions=req.body
+		let email= req.googleUserData.email
+		try{
+			let updatedQuestions = await updateQuestions(listOfQuestions, email)
 			res.json(updatedQuestions)
-		}
-		catch (e) {
+		}catch (errors) {
 			// ERROR IN USER INPUT DATA
-			res.status(400).json({ error: e.map( error => error.message ) })
+			return res.status(errors[0].code).json({ error: errors} )
 		}
+		
 	},
     deleteAllQuestionsOfTest:async (req, res) => {
         let testId = req.query.testId
 		try {
 			let deletedQuestions = await deleteAllQuestionsOfTest(testId)
-			if ( deletedQuestions == null){
-				// ERROR IN SERVER CODE
-				res.status(500).json({ error: "error update questions"})	
-			} 
-
 			res.json(deletedQuestions)
-		}
-		catch (e) {
+		}catch (errors) {
 			// ERROR IN USER INPUT DATA
-			res.status(400).json({ error: e.map( error => error.message ) })
+			return res.status(errors[0].code).json({ error: errors} )
 		}
 	},
     deleteQuestionInTest:async (req, res) => {
@@ -92,16 +71,10 @@ controllerQuestionsPrivate={
         let numberOfQuestion = req.params.numberOfQuestion
 		try {
 			let deletedQuestion = await deleteQuestionInTest(numberOfQuestion,testId)
-			if ( deletedQuestion == null){
-				// ERROR IN SERVER CODE
-				res.status(500).json({ error: "error update questions"})	
-			} 
-
 			res.json(deletedQuestion)
-		}
-		catch (e) {
+		}catch (errors) {
 			// ERROR IN USER INPUT DATA
-			res.status(400).json({ error: e.map( error => error.message ) })
+			return res.status(errors[0].code).json({ error: errors} )
 		}
 	},
 }

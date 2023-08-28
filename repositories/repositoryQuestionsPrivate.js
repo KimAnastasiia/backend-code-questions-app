@@ -38,42 +38,32 @@ repositoryQuestionsPrivate = {
         }
         return result
     },
-    insertQuestions: async (listQuestions, email, testId) => {
+    insertQuestions: async (index ,code, email,question,answer1,answer2, answer3, answer4, rightAnswer, testId) => {
         let result=null
         try {
             await database.connect()
-
-            listQuestions.forEach(async (el, index) => {
-               await database.query(
-                    "INSERT INTO questions ( numberOfQuestion, code, email, question, answer1, answer2, answer3, answer4, rightAnswer, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    [(index + 1), el.code, email, el.question, el.answer1, el.answer2, el.answer3, el.answer4, el.rightAnswer, testId])
-            })
+            result = await database.query(
+            "INSERT INTO questions ( numberOfQuestion, code, email, question, answer1, answer2, answer3, answer4, rightAnswer, testId ) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [index,code, email, question,answer1, answer2, answer3, answer4, rightAnswer, testId])
             result=true
             database.disConnect()
-
         } catch (error) {
             database.disConnect()
             console.log(error)
         }
         return result 
     },
-    updateQuestions: async (listQuestions, email) => {
+    updateQuestions: async (question, answer1, answer2, answer3,answer4, rightAnswer, code, testId, numberOfQuestion, email) => {
         let result = null
         try {
             await database.connect()
-           
-            listQuestions.forEach(async (test) => {
-                try {
-                    await database.query("UPDATE questions SET  question=?, answer1=?,  answer2=?, answer3=?, answer4=?, rightAnswer=?, code=?  where testId=? and numberOfQuestion=? and email=? ",
-                    [test.question, test.answer1, test.answer2, test.answer3, test.answer4, test.rightAnswer, test.code, test.testId, test.numberOfQuestion, email])
-                } catch (error) {
-                    database.disConnect()
-                }
-            })
+            await database.query("UPDATE questions SET  question=?, answer1=?,  answer2=?, answer3=?, answer4=?, rightAnswer=?, code=?  where testId=? and numberOfQuestion=? and email=? ",
+            [question, answer1, answer2, answer3,answer4,rightAnswer,code,testId, numberOfQuestion, email])
             result=true
             database.disConnect()
         } catch (err) {
             database.disConnect()
+            console.log(err)
         }
         return result
     },

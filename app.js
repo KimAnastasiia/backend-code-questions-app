@@ -6,25 +6,27 @@ let app = express()
 
 var cors = require('cors');
 const routerPublicUsers = require("./routerPublicUsers");
-const routerTest = require('./routerTest');
 app.use(cors())
 
 app.use(express.static("public"))
 app.use(express.json());
 var fileUpload = require('express-fileupload');
+
 const routerQuestion = require('./routerQuestion');
 const routerTestResults = require('./routerTestResults');
-const routerQuestionsPrivate = require('./routers/routerQuestionsPrivate');
+
+
 const initMiddlewares = require('./middlewares/middlewares');
 const initRouters = require("./routers/routers");
+
 app.use(fileUpload());
 initMiddlewares(app)
 initRouters(app);
+
 app.use("/public/users", routerPublicUsers)
-app.use("/test", routerTest)
 app.use("/question", routerQuestion)
 app.use("/testresults", routerTestResults)
-app.use("/questions/private", routerQuestionsPrivate)
+
 app.listen(8080, ()=>{
     console.log("Server in 8081")
 })
