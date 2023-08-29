@@ -7,7 +7,7 @@ serviceTest = {
         let errors = []
 
         if (email == undefined)
-            errors.push(new InputError("email", "'email is undefined"));
+            errors.push(new InputError("email", "email is undefined"));
         if (errors.length > 0)
             throw errors
 
