@@ -84,11 +84,17 @@ serviceTest = {
 
             objectQuestion.questionText = questionText[i][1];
 
+            if(objectQuestion.questionText==undefined || objectQuestion.questionText=="" || objectQuestion.questionText=='\r\n\r\n')
+                errors.push(new InputError("questionText", `questionText in question ${(i+1)} is undefined`));
+
             regex = /^A\..+/gm;
             //match = allText.match(regex);
             let optionA = Array.from(allText.matchAll(regex))
 
             objectQuestion.optionA = optionA[i][0].slice(3)
+
+            if(objectQuestion.optionA==undefined || objectQuestion.optionA=="")
+                errors.push(new InputError("optionA", `optionA in question ${(i+1)} is undefined`));
 
             regex = /^B\..+/gm;
             //match = allText.match(regex);
@@ -96,23 +102,46 @@ serviceTest = {
 
             objectQuestion.optionB = optionB[i][0].slice(3)
 
+            
+            if(objectQuestion.optionB==undefined || objectQuestion.optionB=="")
+                errors.push(new InputError("optionB", `optionB in question ${(i+1)} is undefined`));
+
             regex = /^C\..+/gm;
             //match = allText.match(regex);
             let optionC = Array.from(allText.matchAll(regex))
 
             objectQuestion.optionC = optionC[i][0].slice(3)
 
+            if(objectQuestion.optionC==undefined || objectQuestion.optionC=="")
+                errors.push(new InputError("optionB",` optionB in question ${(i+1)} is undefined`));
+
             regex = /^D\..+/gm;
             //match = allText.match(regex);
             let optionD = Array.from(allText.matchAll(regex))
 
             objectQuestion.optionD = optionD[i][0].slice(3)
+  
+            if(objectQuestion.optionD==undefined || objectQuestion.optionD=="")
+                errors.push(new InputError("optionD", `optionD in question ${(i+1)} is undefined`));
 
             regex = /Respuesta:\s*([A-D])/g;
             let rightAnswer = Array.from(allText.matchAll(regex))
 
-            objectQuestion.rightAnswer = rightAnswer[i][1];
+            if(rightAnswer.length==0)
+                errors.push(new InputError("rightAnswer", `rightAnswer in question ${(i+1)} is undefined`));
+            else
+                objectQuestion.rightAnswer = rightAnswer[i][1];
+
+            if(objectQuestion.rightAnswer==undefined || objectQuestion.rightAnswer=="")
+                errors.push(new InputError("rightAnswer", `rightAnswer in question ${(i+1)} is undefined`));
+
             objectQuestion.nameOfTest = name
+
+            if(objectQuestion.nameOfTest==undefined || objectQuestion.nameOfTest=="")
+                errors.push(new InputError("nameOfTest", `nameOfTest in question ${(i+1)} is undefined`));
+
+            if (errors.length > 0)
+                throw errors
 
             allQuestions.push(objectQuestion)
         }

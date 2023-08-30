@@ -23,3 +23,4 @@ app.use("/public/users", routerPublicUsers)
 app.listen(8080, ()=>{
     console.log("Server in 8081")
 })
+module.exports = app;
